@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using KnightBus.Azure.ServiceBus.Messages;
 using KnightBus.Core;
@@ -9,9 +10,24 @@ using KnightBus.Core.Exceptions;
 using KnightBus.Messages;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
+using Microsoft.Azure.ServiceBus.Management;
 
 namespace KnightBus.Azure.ServiceBus
 {
+    public class ServiceBusDetails:ITransportManager
+    {
+        private readonly IServiceBusConfiguration _configuration;
+
+        public ServiceBusDetails(IServiceBusConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public Task<IList<string>> ListQueues(CancellationToken cancellationToken)
+        {
+            var manager = new ManagementClient(_configuration.ConnectionString);
+        }
+    }
+
     public interface IServiceBus
     {
         /// <summary>
